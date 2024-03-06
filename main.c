@@ -1,14 +1,14 @@
-#define F_CPU 1000000UL
 #include <avr/io.h>
-#include <util/delay.h>
 
 int main(void) {
-    DDRB |= (1 << DDB4);
+    DDRD |= (1 << PD2);
+    DDRD &= ~(1 << PD4);
+
     while (1) {
-        PORTB |= (1 << PB4);
-        _delay_ms(1000);
-        PORTB &= ~(1 << PB4);
-        _delay_ms(1000);
+        if ((PIND & (1 << PD4)) == 0)
+            PORTD &= ~(1 << PD2);
+        else
+            PORTD |= (1 << PD2);
     }
-    return 1;
+    return 0;
 }
