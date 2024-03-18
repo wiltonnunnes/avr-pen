@@ -29,20 +29,20 @@ unsigned short ADC_read(uint8_t adc) {
 }
 
 int main(void) {
-    DDRD |= (1 << PD2);
-    DDRD &= ~(1 << PD4);
+    DDRD |= (255 << PD2);
+    DDRB |= (255 >> 2);
+    DDRB &= ~(1 << PB4);
 
     UART_init(103);
     ADC_init();
 
-    uint8_t data = 1;
+    unsigned short data;
 
     while (1) {
-        if ((PIND & (1 << PD4)) == 0)
-            PORTD &= ~(1 << PD2);
-        else {
-            PORTD |= (1 << PD2);
-            //UART_putc(data);
+        if ((PINB & (1 << PB4)) == 0) {
+            data = ADC_read(0);
+            PORTD |= (data << PD2);
+            PORTB |= (data >> 2);
         }
     }
     return 0;
