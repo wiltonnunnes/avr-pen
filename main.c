@@ -17,8 +17,10 @@ void UART_putc(uint8_t data) {
 }
 
 void ADC_init() {
-    ADMUX = 0b01000000;
-    ADCSRA = 0b10000000;
+    ADMUX |= (1 << REFS0);
+    ADMUX &= ~(1 << ADLAR);
+    ADCSRA |= (1 << ADPS0);
+    ADCSRA |= (1 << ADEN);
 }
 
 unsigned short ADC_read(uint8_t adc) {
@@ -39,11 +41,16 @@ int main(void) {
     unsigned short data;
 
     while (1) {
+        data = ADC_read(0);
+        PORTD |= (data << PD2);
+        PORTB |= (data >> 6);
+        /*
         if ((PINB & (1 << PB4)) == 0) {
             data = ADC_read(0);
             PORTD |= (data << PD2);
             PORTB |= (data >> 2);
         }
+        */
     }
     return 0;
 }
